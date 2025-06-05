@@ -71,5 +71,5 @@ _(Coming soon — once the app’s UI is finalized!)_
 
 ---
 
-## 🐾 Made with heart by [@monieelyse](https://github.com/monieelyse)
+## 🐾 Made with love by [@monieelyse](https://github.com/monieelyse)
 
