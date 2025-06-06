@@ -5,11 +5,12 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.8.1
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
+  supabase_flutter: ^1.10.5
   cupertino_icons: ^1.0.8
   flutter_launcher_icons: ^0.14.3
 
@@ -27,3 +28,4 @@ flutter_icons:
   android: true
   ios: true
   image_path: "assets/logo.png"
+

@@ -1,8 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'sign_up_screen.dart';
+import 'home_screen.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  bool _isLoading = false;
+  String? _errorMessage;
+
+  Future<void> _login() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final response = await Supabase.instance.client.auth.signInWithPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      if (response.user != null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+        );
+      }
+    } on AuthException catch (error) {
+      setState(() {
+        _errorMessage = error.message;
+      });
+    } catch (error) {
+      setState(() {
+        _errorMessage = 'Unexpected error occurred. Please try again.';
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +72,7 @@ class LoginScreen extends StatelessWidget {
               ),
               const SizedBox(height: 30),
               TextField(
+                controller: _emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -37,6 +83,7 @@ class LoginScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               TextField(
+                controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   labelText: 'Password',
@@ -46,10 +93,14 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
+              if (_errorMessage != null)
+                Text(
+                  _errorMessage!,
+                  style: const TextStyle(color: Colors.red),
+                ),
+              const SizedBox(height: 10),
               ElevatedButton(
-                onPressed: () {
-                  // TODO: Handle login logic
-                },
+                onPressed: _isLoading ? null : _login,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.pink,
                   padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
@@ -57,18 +108,20 @@ class LoginScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(30),
                   ),
                 ),
-                child: const Text('Log In', style: TextStyle(fontSize: 16, color: Colors.white)),
+                child: _isLoading
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : const Text('Log In', style: TextStyle(fontSize: 16, color: Colors.white)),
               ),
               const SizedBox(height: 10),
               TextButton(
-  onPressed: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const SignUpScreen()),
-    );
-  },
-  child: const Text("Don't have an account? Sign Up"),
-),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const SignUpScreen()),
+                  );
+                },
+                child: const Text("Don't have an account? Sign Up"),
+              ),
             ],
           ),
         ),
