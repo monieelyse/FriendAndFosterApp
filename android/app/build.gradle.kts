@@ -1,12 +1,11 @@
 plugins {
     id("com.android.application")
-    id("kotlin-android")
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
+    id("org.jetbrains.kotlin.android")
     id("dev.flutter.flutter-gradle-plugin")
 }
 
 android {
-    namespace = "com.example.friend_and_foster" 
+    namespace = "com.example.friend_and_foster"
     compileSdk = 35
 
     defaultConfig {
@@ -17,16 +16,26 @@ android {
         versionName = "1.0"
     }
 
+    // Ensure both Java & Kotlin use Java 11
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+
+    // (Optional) Use the Gradle JVM toolchain for Kotlin
+    kotlin {
+      jvmToolchain(11)
+    }
+
     ndkVersion = "27.0.12077973"
 
     buildTypes {
         release {
             signingConfig = signingConfigs.getByName("debug")
         }
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
     }
 }
 

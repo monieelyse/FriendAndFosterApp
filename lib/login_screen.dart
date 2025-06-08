@@ -1,51 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'sign_up_screen.dart';
-import 'home_screen.dart';
+import 'supabase_client.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
-
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  bool _isLoading = false;
-  String? _errorMessage;
+  final _email = TextEditingController();
+  final _pass  = TextEditingController();
+  bool _loading = false;
+  String? _error;
 
   Future<void> _login() async {
     setState(() {
-      _isLoading = true;
-      _errorMessage = null;
+      _loading = true;
+      _error = null;
     });
 
     try {
-      final response = await Supabase.instance.client.auth.signInWithPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
+      final res = await supabaseClient.auth.signInWithPassword(
+        email: _email.text.trim(),
+        password: _pass.text.trim(),
       );
-
-      if (response.user != null) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const HomeScreen()),
-        );
+      if (res.user != null) {
+        Navigator.pushReplacementNamed(context, '/home');
+      } else {
+        setState(() => _error = 'Login failed');
       }
-    } on AuthException catch (error) {
-      setState(() {
-        _errorMessage = error.message;
-      });
-    } catch (error) {
-      setState(() {
-        _errorMessage = 'Unexpected error occurred. Please try again.';
-      });
+    } catch (e) {
+      setState(() => _error = e.toString());
     } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      setState(() => _loading = false);
     }
   }
 
@@ -55,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: Colors.pink.shade50,
       body: Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(32.0),
+          padding: const EdgeInsets.all(32),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -63,19 +50,22 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 20),
               const Text(
                 'Welcome Back!',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.brown),
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.brown,
+                ),
               ),
               const SizedBox(height: 10),
-              const Text(
-                'Please log in to continue',
-                style: TextStyle(fontSize: 16),
-              ),
+              const Text('Please log in to continue'),
               const SizedBox(height: 30),
               TextField(
-                controller: _emailController,
+                controller: _email,
                 decoration: InputDecoration(
                   labelText: 'Email',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   filled: true,
                   fillColor: Colors.white,
                 ),
@@ -83,44 +73,46 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 20),
               TextField(
-                controller: _passwordController,
-                obscureText: true,
+                controller: _pass,
                 decoration: InputDecoration(
                   labelText: 'Password',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   filled: true,
                   fillColor: Colors.white,
                 ),
+                obscureText: true,
               ),
+              if (_error != null) ...[
+                const SizedBox(height: 10),
+                Text(_error!, style: const TextStyle(color: Colors.red)),
+              ],
               const SizedBox(height: 20),
-              if (_errorMessage != null)
-                Text(
-                  _errorMessage!,
-                  style: const TextStyle(color: Colors.red),
-                ),
-              const SizedBox(height: 10),
               ElevatedButton(
-                onPressed: _isLoading ? null : _login,
+                onPressed: _loading ? null : _login,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.pink,
-                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 50, vertical: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
                 ),
-                child: _isLoading
+                child: _loading
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text('Log In', style: TextStyle(fontSize: 16, color: Colors.white)),
+                    : const Text(
+                        'Log In',
+                        style:
+                            TextStyle(fontSize: 16, color: Colors.white),
+                      ),
               ),
               const SizedBox(height: 10),
               TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const SignUpScreen()),
-                  );
-                },
-                child: const Text("Don't have an account? Sign Up"),
+                onPressed: () =>
+                    Navigator.pushNamed(context, '/signup'),
+                child:
+                    const Text("Don't have an account? Sign Up"),
               ),
             ],
           ),

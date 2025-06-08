@@ -10,7 +10,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  supabase_flutter: ^1.10.5
+
+  # Core Supabase client (no Apple plugin)
+  supabase: ^1.11.11
+
   cupertino_icons: ^1.0.8
   flutter_launcher_icons: ^0.14.3
 
@@ -21,6 +24,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
   assets:
     - assets/logo.png
 
@@ -28,4 +32,3 @@ flutter_icons:
   android: true
   ios: true
   image_path: "assets/logo.png"
-

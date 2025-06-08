@@ -1,51 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'login_screen.dart';
-import 'home_screen.dart';
+import 'supabase_client.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
-
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  bool _isLoading = false;
-  String? _errorMessage;
+  final _email = TextEditingController();
+  final _pass  = TextEditingController();
+  bool _loading = false;
+  String? _error;
 
   Future<void> _signUp() async {
     setState(() {
-      _isLoading = true;
-      _errorMessage = null;
+      _loading = true;
+      _error = null;
     });
 
     try {
-      final response = await Supabase.instance.client.auth.signUp(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
+      final res = await supabaseClient.auth.signUp(
+        email: _email.text.trim(),
+        password: _pass.text.trim(),
       );
-
-      if (response.user != null) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const HomeScreen()),
-        );
+      if (res.user != null) {
+        Navigator.pushReplacementNamed(context, '/home');
+      } else {
+        setState(() => _error = 'Sign-up failed');
       }
-    } on AuthException catch (error) {
-      setState(() {
-        _errorMessage = error.message;
-      });
-    } catch (_) {
-      setState(() {
-        _errorMessage = 'Unexpected error occurred. Please try again.';
-      });
+    } catch (e) {
+      setState(() => _error = e.toString());
     } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      setState(() => _loading = false);
     }
   }
 
@@ -55,7 +42,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       backgroundColor: Colors.pink.shade50,
       body: Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(32.0),
+          padding: const EdgeInsets.all(32),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -63,14 +50,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
               const SizedBox(height: 20),
               const Text(
                 'Create an Account',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.brown),
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.brown,
+                ),
               ),
               const SizedBox(height: 30),
               TextField(
-                controller: _emailController,
+                controller: _email,
                 decoration: InputDecoration(
                   labelText: 'Email',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   filled: true,
                   fillColor: Colors.white,
                 ),
@@ -78,43 +71,44 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               const SizedBox(height: 20),
               TextField(
-                controller: _passwordController,
-                obscureText: true,
+                controller: _pass,
                 decoration: InputDecoration(
                   labelText: 'Password',
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   filled: true,
                   fillColor: Colors.white,
                 ),
+                obscureText: true,
               ),
+              if (_error != null) ...[
+                const SizedBox(height: 10),
+                Text(_error!, style: const TextStyle(color: Colors.red)),
+              ],
               const SizedBox(height: 20),
-              if (_errorMessage != null)
-                Text(
-                  _errorMessage!,
-                  style: const TextStyle(color: Colors.red),
-                ),
-              const SizedBox(height: 10),
               ElevatedButton(
-                onPressed: _isLoading ? null : _signUp,
+                onPressed: _loading ? null : _signUp,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.pink,
-                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 50, vertical: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
                 ),
-                child: _isLoading
+                child: _loading
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text('Sign Up', style: TextStyle(fontSize: 16, color: Colors.white)),
+                    : const Text(
+                        'Sign Up',
+                        style:
+                            TextStyle(fontSize: 16, color: Colors.white),
+                      ),
               ),
               const SizedBox(height: 10),
               TextButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (_) => const LoginScreen()),
-                  );
-                },
+                onPressed: () =>
+                    Navigator.pushReplacementNamed(context, '/login'),
                 child: const Text("Already have an account? Log In"),
               ),
             ],
