@@ -39,7 +39,7 @@ We're here to build meaningful moments — for humans *and* pups 💛
 
 ## 🔮 Roadmap
 
-- [ ] Firebase Authentication
+- [ ] Supabase Authentication
 - [ ] Dog profile & listing pages
 - [ ] Apply to Foster / Adopt workflows
 - [ ] In-app calendar for bookings
