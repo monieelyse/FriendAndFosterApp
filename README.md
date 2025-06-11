@@ -1,5 +1,9 @@
 # 🐶 Friend & Foster – Mobile App
 
+## License - This project is proprietary and protected under U.S. copyright law.  No part of this codebase may be used, copied, modified, or distributed without explicit written permission from the owner.
+-----
+
+
 Welcome to **Friend & Foster** — a purpose-driven mobile app that connects people with rescue dogs for weekend stays, long walks, and forever homes. Built with ❤️ using Flutter.
 
 > ✨ From a console app prototype to a full mobile experience — helping shelter dogs find love, one walk at a time.
