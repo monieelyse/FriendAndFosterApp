@@ -2,35 +2,38 @@ import 'package:flutter/material.dart';
 import 'supabase_client.dart';
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({super.key});
+  const SignUpScreen({Key? key}) : super(key: key);
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  final _email = TextEditingController();
-  final _pass  = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  final _emailCtrl = TextEditingController();
+  final _passCtrl  = TextEditingController();
   bool _loading = false;
-  String? _error;
 
   Future<void> _signUp() async {
-    setState(() {
-      _loading = true;
-      _error = null;
-    });
+    if (!_formKey.currentState!.validate()) return;
+    setState(() => _loading = true);
 
     try {
       final res = await supabaseClient.auth.signUp(
-        email: _email.text.trim(),
-        password: _pass.text.trim(),
+        email: _emailCtrl.text.trim(),
+        password: _passCtrl.text,
       );
       if (res.user != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('🎉 Signed up')),
+        );
         Navigator.pushReplacementNamed(context, '/home');
       } else {
-        setState(() => _error = 'Sign-up failed');
+        throw Exception('Sign-up failed');
       }
     } catch (e) {
-      setState(() => _error = e.toString());
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('⚠️ $e')),
+      );
     } finally {
       setState(() => _loading = false);
     }
@@ -39,80 +42,53 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.pink.shade50,
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(32),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset('assets/logo.png', height: 120),
-              const SizedBox(height: 20),
-              const Text(
-                'Create an Account',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.brown,
-                ),
-              ),
-              const SizedBox(height: 30),
-              TextField(
-                controller: _email,
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
-                ),
-                keyboardType: TextInputType.emailAddress,
-              ),
-              const SizedBox(height: 20),
-              TextField(
-                controller: _pass,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
-                ),
-                obscureText: true,
-              ),
-              if (_error != null) ...[
-                const SizedBox(height: 10),
-                Text(_error!, style: const TextStyle(color: Colors.red)),
-              ],
-              const SizedBox(height: 20),
-              ElevatedButton(
+      appBar: AppBar(title: const Text('Sign Up')),
+      body: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Form(
+          key: _formKey,
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            TextFormField(
+              controller: _emailCtrl,
+              decoration: const InputDecoration(labelText: 'Email'),
+              keyboardType: TextInputType.emailAddress,
+              validator: (v) {
+                if (v == null || v.isEmpty) return 'Email required';
+                final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+                if (!emailRegex.hasMatch(v)) return 'Enter valid email';
+                return null;
+              },
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: _passCtrl,
+              decoration: const InputDecoration(labelText: 'Password'),
+              obscureText: true,
+              validator: (v) {
+                if (v == null || v.isEmpty) return 'Password required';
+                if (v.length < 6) return 'Min 6 characters';
+                return null;
+              },
+            ),
+            const SizedBox(height: 24),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
                 onPressed: _loading ? null : _signUp,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.pink,
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 50, vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
                 child: _loading
-                    ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text(
-                        'Sign Up',
-                        style:
-                            TextStyle(fontSize: 16, color: Colors.white),
-                      ),
+                    ? const SizedBox(
+                        height: 16,
+                        width: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                      )
+                    : const Text('Sign Up'),
               ),
-              const SizedBox(height: 10),
-              TextButton(
-                onPressed: () =>
-                    Navigator.pushReplacementNamed(context, '/login'),
-                child: const Text("Already have an account? Log In"),
-              ),
-            ],
-          ),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pushReplacementNamed(context, '/login'),
+              child: const Text("Already have an account? Log In"),
+            ),
+          ]),
         ),
       ),
     );

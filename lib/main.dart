@@ -1,9 +1,11 @@
 // lib/main.dart
 
 import 'package:flutter/material.dart';
+import 'supabase_client.dart';
 import 'login_screen.dart';
 import 'sign_up_screen.dart';
 import 'home_screen.dart';
+import 'profile_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,18 +13,21 @@ void main() {
 }
 
 class FriendAndFosterApp extends StatelessWidget {
-  const FriendAndFosterApp({super.key});
+  const FriendAndFosterApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // If a user is already signed in, go straight to Home
+    final session = supabaseClient.auth.currentSession;
     return MaterialApp(
       title: 'Friend & Foster',
       theme: ThemeData(primarySwatch: Colors.pink),
-      initialRoute: '/login',
+      initialRoute: session != null ? '/home' : '/login',
       routes: {
-        '/login': (c) => const LoginScreen(),
-        '/signup': (c) => const SignUpScreen(),
-        '/home'  : (c) => const HomeScreen(),
+        '/login':   (ctx) => const LoginScreen(),
+        '/signup':  (ctx) => const SignUpScreen(),
+        '/home':    (ctx) => const HomeScreen(),
+        '/profile': (ctx) => const ProfileScreen(),
       },
     );
   }
