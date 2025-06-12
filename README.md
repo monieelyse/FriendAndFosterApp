@@ -59,13 +59,14 @@ Friend & Foster began as a **console-based prototype**, built to explore the pot
 
 ## 🤝 How to Contribute
 
-1. Fork the repo
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add something pawsome'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+Support originality. Respect creators.
+We welcome collaboration — not imitation. 
 
 We welcome devs, designers, and dog lovers 🐕
+Please reach out for licensing or partnership inquiries:
+📧 info@friendandfoster.com
+📧 monica.elyse.nelson@outlook.com
+
 
 ---
 
