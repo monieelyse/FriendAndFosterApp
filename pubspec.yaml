@@ -5,14 +5,17 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: ">=2.17.0 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
-  # Core Supabase client (no Apple plugin)
-  supabase: ^1.11.11
+  # Supabase client for Flutter
+  supabase_flutter: ^1.8.0
+
+  # HTTP support (pulled in by supabase_flutter but you can add extras if needed)
+  # http: ^0.13.6
 
   cupertino_icons: ^1.0.8
   flutter_launcher_icons: ^0.14.3
