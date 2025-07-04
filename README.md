@@ -38,8 +38,13 @@ We're here to build meaningful moments — for humans *and* pups 💛
 
 - Console app prototype ([view it here](https://github.com/monieelyse/friendandfoster))
 - Custom splash screen, home screen, and logo branding
+<<<<<<< HEAD
 - **Login and Signup screens (UI complete)**
 - **Dog profile screen (UI complete)**
+=======
+- Login and Signup screens (UI complete)
+- Dog profile screen (UI complete)
+>>>>>>> 564637214de18fad850cb1cbe2fdac1320354d7a
 - Navigation flow between login → home → dog profiles
 - Supabase project initialized and connected
 - Supabase keys securely configured in the app
@@ -59,6 +64,7 @@ We're here to build meaningful moments — for humans *and* pups 💛
 
 - [ ] Backend-integrated dog listings from Supabase
 - [ ] Foster/Adopt application workflows
+<<<<<<< HEAD
 - [ ] In-app calendar for scheduling bookings
 - [ ] Admin dashboard for shelter partners
 - [ ] Push notifications for confirmations & reminders
@@ -92,3 +98,6 @@ _(Coming soon — after UI polishing and auth flow completion!)_
 ---
 
 ## 🐾 Made with love by [@monieelyse](https://github.com/monieelyse)
+=======
+- [ ] In-app calenda
+>>>>>>> 564637214de18fad850cb1cbe2fdac1320354d7a
