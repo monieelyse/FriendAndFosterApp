@@ -12,7 +12,7 @@ dependencies:
     sdk: flutter
 
   # Supabase client for Flutter
-  supabase_flutter: ^1.8.0
+  supabase_flutter: ^2.9.1
 
   # HTTP support (pulled in by supabase_flutter but you can add extras if needed)
   # http: ^0.13.6
@@ -23,7 +23,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
 
 flutter:
   uses-material-design: true

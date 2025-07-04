@@ -3,7 +3,7 @@ import '../models/dog.dart';
 
 class RentForm extends StatefulWidget {
   final Dog dog;
-  const RentForm({Key? key, required this.dog}) : super(key: key);
+  const RentForm({super.key, required this.dog});
 
   @override
   _RentFormState createState() => _RentFormState();

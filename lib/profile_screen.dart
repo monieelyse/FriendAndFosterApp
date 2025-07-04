@@ -1,10 +1,8 @@
-// lib/profile_screen.dart
-
 import 'package:flutter/material.dart';
-import 'supabase_client.dart';
+import 'supabase_client.dart'; // Make sure this exports your initialized SupabaseClient
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
@@ -34,12 +32,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     try {
       final resp = await supabaseClient
           .from('profiles')
-          .select<Map<String, dynamic>>()
+          .select()
           .eq('id', user.id)
-          .single()
-          .execute();
+          .maybeSingle();
 
-      final data = resp.data;
+      final data = resp;
       if (data != null) {
         _nameCtrl.text = data['full_name'] ?? '';
         _phoneCtrl.text = data['phone'] ?? '';
@@ -50,7 +47,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           'email': user.email,
           'full_name': '',
           'phone': '',
-        }).execute();
+        });
       }
     } catch (e) {
       setState(() {
@@ -81,7 +78,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         'id': user.id,
         'full_name': _nameCtrl.text.trim(),
         'phone': _phoneCtrl.text.trim(),
-      }).execute();
+      });
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Profile saved!')),

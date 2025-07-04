@@ -5,7 +5,7 @@ import 'widgets/rent_form.dart';
 class DogProfileScreen extends StatelessWidget {
   final Dog dog;
 
-  const DogProfileScreen({Key? key, required this.dog}) : super(key: key);
+  const DogProfileScreen({super.key, required this.dog});
 
   @override
   Widget build(BuildContext context) {

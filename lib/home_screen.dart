@@ -1,10 +1,8 @@
-// lib/home_screen.dart
-
 import 'package:flutter/material.dart';
 import 'supabase_client.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   Future<void> _signOut(BuildContext context) async {
     await supabaseClient.auth.signOut();
