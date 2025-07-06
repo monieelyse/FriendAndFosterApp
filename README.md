@@ -41,7 +41,7 @@ We're here to build meaningful moments — for humans *and* pups 💛
 
 - **Login and Signup screens (UI complete)**
 - **Dog profile screen (UI complete)**
-=======
+
 - Login and Signup screens (UI complete)
 - Dog profile screen (UI complete)
 
@@ -98,5 +98,3 @@ _(Coming soon — after UI polishing and auth flow completion!)_
 ---
 
 ## 🐾 Made with love by [@monieelyse](https://github.com/monieelyse)
-=======
-- [ ] In-app calendar
